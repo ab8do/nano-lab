@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Nano Lab: gesture- and voice-driven interaction on an Arduino Nano with a 128x64 OLED"
+type: software
+authors:
+  - family-names: "YOUR-LAST-NAME"
+    given-names: "YOUR-FIRST-NAME"
+version: "1.0.0"
+date-released: "2026-10-10"
+license: MIT
+repository-code: "https://github.com/YOUR-USERNAME/nano-lab"
+url: "https://YOUR-USERNAME.github.io/nano-lab/"
+keywords:
+  - arduino
+  - human-computer interaction
+  - gesture recognition
+  - embedded systems
+  - conversational agent
+  - OLED

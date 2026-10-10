@@ -1,0 +1,6 @@
+google-genai>=1.0
+sounddevice
+numpy
+opencv-python
+pyserial
+pydantic

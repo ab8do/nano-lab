@@ -1,0 +1,9 @@
+ollama
+faster-whisper
+sounddevice
+numpy
+opencv-python
+pyserial
+edge-tts
+miniaudio
+pyttsx3

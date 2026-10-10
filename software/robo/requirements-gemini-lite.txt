@@ -1,0 +1,10 @@
+google-genai>=1.0
+sounddevice
+numpy
+opencv-python
+pyserial
+edge-tts
+miniaudio
+pyttsx3
+# optional, only for STT_MODE = "whisper":
+# faster-whisper
