@@ -8,8 +8,8 @@ authors:
 version: "1.0.0"
 date-released: "2026-10-10"
 license: MIT
-repository-code: "https://github.com/YOUR-USERNAME/nano-lab"
-url: "https://YOUR-USERNAME.github.io/nano-lab/"
+repository-code: "https://github.com/ab8do/nano-lab"
+url: "https://ab8do.github.io/nano-lab/"
 keywords:
   - arduino
   - human-computer interaction

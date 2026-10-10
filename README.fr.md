@@ -2,7 +2,7 @@
 
 **Interaction par gestes et par la voix sur un Arduino Nano avec un OLED 128×64**
 
-[English](README.md) · [العربية](README.ar.md) · **Site :** `https://YOUR-USERNAME.github.io/nano-lab/`
+[English](README.md) · [العربية](README.ar.md) · **Site :** `https://ab8do.github.io/nano-lab/`
 
 ## Résumé
 
@@ -42,7 +42,7 @@ Les broches du Nano doivent être **soudées**, sinon l'écran reste noir. Si l'
 ## Démarrage rapide
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/nano-lab.git
+git clone https://github.com/ab8do/nano-lab.git
 cd nano-lab
 pip install -r software/dino/requirements.txt
 python software/dino/dino_controller.py   # réglez d'abord PORT dans le fichier

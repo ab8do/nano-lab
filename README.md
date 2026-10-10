@@ -7,7 +7,7 @@
 ![Python](https://img.shields.io/badge/python-3.10%2B-3776AB)
 ![Languages](https://img.shields.io/badge/site-EN%20%C2%B7%20FR%20%C2%B7%20AR-ffd21f)
 
-> **Live website (English, Français, العربية):** `https://YOUR-USERNAME.github.io/nano-lab/`
+> **Live website (English, Français, العربية):** `https://ab8do.github.io/nano-lab/`
 > Other languages of this README: [العربية](README.ar.md) · [Français](README.fr.md)
 
 ---
@@ -181,7 +181,7 @@ This is an honest account of what has and has not been checked.
 Prerequisites: Arduino IDE with the **U8g2** library, Python 3.10+ and a webcam; for Robo also a microphone and speakers.
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/nano-lab.git
+git clone https://github.com/ab8do/nano-lab.git
 cd nano-lab
 ```
 

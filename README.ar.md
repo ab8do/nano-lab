@@ -4,7 +4,7 @@
 
 **تفاعل بالإيماءات والصوت على أردوينو نانو وشاشة OLED بدقة 128×64**
 
-[English](README.md) · [Français](README.fr.md) · **الموقع:** `https://YOUR-USERNAME.github.io/nano-lab/`
+[English](README.md) · [Français](README.fr.md) · **الموقع:** `https://ab8do.github.io/nano-lab/`
 
 ## الملخّص
 
@@ -44,7 +44,7 @@
 ## التشغيل السريع
 
 ```bash
-git clone https://github.com/YOUR-USERNAME/nano-lab.git
+git clone https://github.com/ab8do/nano-lab.git
 cd nano-lab
 pip install -r software/dino/requirements.txt
 python software/dino/dino_controller.py   # غيّر PORT داخل الملف أولًا
