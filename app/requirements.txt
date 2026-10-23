@@ -1,0 +1,10 @@
+pyserial
+opencv-python-headless
+mediapipe
+numpy
+sounddevice
+edge-tts
+miniaudio
+pyttsx3
+google-genai>=1.0
+pydantic

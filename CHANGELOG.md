@@ -5,6 +5,9 @@ All notable changes to this project. Dates are 2026.
 ## 1.0.0 — repository release (10 Oct)
 - First public layout: firmware, software, documentation, trilingual website in `docs/` (GitHub Pages), CI.
 
+ ## 1.1.0
+   - Desktop app (`app/`): one control panel for Dino, Gesture Games and Robo; automatic firmware upload when the project changes; live camera preview; token meter; EN/FR/AR interface; CI builds Windows and Linux packages with all libraries, the uploader and the hand model bundled.
+
 ## Website (10 Oct)
 - Trilingual (EN/FR/AR, with RTL), 3D scene (Three.js) with live OLED simulations of all demos, wiring diagram, protocol tables, back-end comparison, setup and FAQ.
 

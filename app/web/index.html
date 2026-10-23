@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nano Lab</title>
+<style>
+:root{--bg:#e8f0f9;--panel:#fff;--line:#c9d8ea;--text:#0a1f3d;--muted:#44607f;--yel:#ffc928;--onyel:#1c1500;--blue:#0a66c9;--onblue:#fff;--soft:rgba(10,102,201,.1);--ok:#12805c;--bad:#b3261e;--code:#0a1a30;--codet:#d9eaff}
+@media (prefers-color-scheme:dark){:root{--bg:#061a31;--panel:#0b2748;--line:#1f4572;--text:#e7f2ff;--muted:#9ab6d6;--yel:#ffd21f;--blue:#4cb8ff;--onblue:#031325;--soft:rgba(76,184,255,.14);--ok:#3ddc97;--bad:#ff8a80;--code:#030d1a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.7 "Segoe UI",Tahoma,"Noto Sans Arabic","Noto Sans",system-ui,sans-serif}
+:lang(ar) body,html[lang=ar] body{line-height:1.9}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px clamp(14px,3vw,32px);background:var(--panel);border-bottom:1px solid var(--line)}
+header h1{margin:0;font-size:1.25rem;flex:1;display:flex;align-items:center;gap:10px}
+.logo{width:30px;height:30px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{font:inherit;font-size:.85rem;padding:6px 12px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--yel);color:var(--onyel);font-weight:600}
+button{font:inherit}
+main{max-width:1180px;margin:0 auto;padding:clamp(14px,3vw,28px);display:grid;gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card h2{margin:0 0 10px;font-size:1.05rem}
+.step{display:inline-grid;place-items:center;width:1.8em;height:1.8em;border-radius:50%;background:var(--yel);color:var(--onyel);font-weight:700;font-size:.9rem;margin-inline-end:.5em}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select,input[type=text],input[type=password],input[type=number]{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);min-width:0}
+.btn{padding:10px 20px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--text);cursor:pointer;font-weight:600}
+.btn.primary{background:var(--yel);color:var(--onyel);border-color:transparent;font-size:1.05rem;padding:12px 28px}
+.btn.stop{background:var(--bad);color:#fff;border-color:transparent}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.projects{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media(max-width:820px){.projects{grid-template-columns:1fr}}
+.proj{border:2px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;background:var(--bg);text-align:start;color:var(--text)}
+.proj[aria-pressed=true]{border-color:var(--yel);box-shadow:0 0 0 2px var(--yel) inset}
+.proj b{display:block;font-size:1.1rem}
+.proj span{color:var(--muted);font-size:.92rem}
+.muted{color:var(--muted);font-size:.92rem}
+.pill{display:inline-block;padding:2px 12px;border-radius:999px;background:var(--soft);font-size:.88rem}
+.pill.ok{color:var(--ok)}.pill.bad{color:var(--bad)}
+.live{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:820px){.live{grid-template-columns:1fr}}
+#cam{width:100%;aspect-ratio:4/3;background:#000;border-radius:10px;object-fit:contain;display:block}
+.bar{height:12px;background:var(--soft);border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--yel);width:0}
+pre#log{margin:0;background:var(--code);color:var(--codet);border-radius:10px;padding:12px 14px;font:12.5px/1.55 Consolas,"Courier New",monospace;height:200px;overflow:auto;white-space:pre-wrap;direction:ltr;text-align:left}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:12px}
+.opts label{display:grid;gap:4px;font-size:.92rem}
+.hidden{display:none!important}
+.warn{background:var(--soft);border-inline-start:4px solid var(--yel);padding:10px 14px;border-radius:8px;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+  <h1><svg class="logo" viewBox="0 0 16 16" shape-rendering="crispEdges"><rect width="16" height="16" rx="3" fill="#03060b"/><rect x="2" y="2" width="5" height="4" fill="#ffd21f"/><rect x="9" y="2" width="5" height="4" fill="#ffd21f"/><rect x="2" y="8" width="12" height="2" fill="#46b4ff"/><rect x="4" y="11" width="8" height="2" fill="#46b4ff"/></svg>Nano Lab <span class="muted" id="ver"></span></h1>
+  <div class="seg" id="langSeg" role="group"><button data-l="en">EN</button><button data-l="fr">FR</button><button data-l="ar">AR</button></div>
+  <button class="btn" id="quit" data-t="quit"></button>
+</header>
+<main>
+  <section class="card">
+    <h2><span class="step">1</span><span data-t="s1"></span></h2>
+    <div class="row">
+      <select id="port"></select>
+      <button class="btn" id="refresh" data-t="refresh"></button>
+      <span id="portNote" class="muted"></span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">2</span><span data-t="s2"></span></h2>
+    <div class="projects" id="projects">
+      <button class="proj" data-p="dino" aria-pressed="false"><b>Dino</b><span data-t="dinoD"></span></button>
+      <button class="proj" data-p="games" aria-pressed="false"><b>Gesture Games</b><span data-t="gamesD"></span></button>
+      <button class="proj" data-p="robo" aria-pressed="false"><b>Robo</b><span data-t="roboD"></span></button>
+    </div>
+    <div id="roboOpts" class="hidden">
+      <div class="opts">
+        <label><span data-t="key"></span><input type="password" id="apiKey" autocomplete="off" placeholder="AIza..."></label>
+        <label><span data-t="turns"></span><input type="number" id="turns" min="0" max="8"></label>
+        <label><span data-t="budget"></span><input type="number" id="budget" min="1000" step="1000"></label>
+        <label><span data-t="mic"></span><input type="number" id="mic" min="0" step="50"></label>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <label class="row"><input type="checkbox" id="remember"> <span data-t="remember"></span></label>
+        <label class="row"><input type="checkbox" id="robocam"> <span data-t="robocam"></span></label>
+        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" data-t="getkey"></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2><span class="step">3</span><span data-t="s3"></span></h2>
+    <div class="row">
+      <button class="btn primary" id="start" data-t="start"></button>
+      <button class="btn stop hidden" id="stop" data-t="stop"></button>
+      <button class="btn hidden" id="menu" data-t="menu"></button>
+      <button class="btn" id="flash" data-t="flash"></button>
+      <label class="row"><input type="checkbox" id="autoflash"> <span data-t="autoflash"></span></label>
+    </div>
+    <div class="row" style="margin-top:10px"><span id="status" class="pill"></span><span id="msg" class="muted"></span></div>
+    <div id="warn" class="warn hidden"></div>
+  </section>
+
+  <section class="card live hidden" id="live">
+    <div><img id="cam" alt="camera"></div>
+    <div>
+      <h2 data-t="live"></h2>
+      <p id="hint" class="muted"></p>
+      <div id="infoBox"></div>
+      <div id="tokBox" class="hidden"><div class="muted" id="tokTxt"></div><div class="bar"><i id="tokBar"></i></div></div>
+      <p id="chat"></p>
+    </div>
+  </section>
+
+  <section class="card"><h2 data-t="logh"></h2><pre id="log"></pre></section>
+</main>
+
+<script>
+const TOKEN="__TOKEN__";
+const T={
+ en:{quit:"Quit",s1:"Plug in the Arduino Nano and choose its port",refresh:"Refresh",s2:"Choose a project",s3:"Start",start:"Start",stop:"Stop",flash:"Upload firmware only",menu:"Back to menu",autoflash:"Upload the firmware automatically when the project changes",
+  dinoD:"Jump by raising your hand",gamesD:"Four arcade games with your fingers and hand",roboD:"A face that listens, talks and follows you",
+  key:"Gemini API key",turns:"Memory (turns)",budget:"Token budget",mic:"Mic threshold (0 = auto)",remember:"Remember the key on this computer (stored as plain text)",robocam:"Eyes follow my face (camera)",getkey:"Get a free key",
+  live:"Live",logh:"Log",idle:"Idle",starting:"Starting...",running:"Running",stopped:"Stopped",error:"Error",flashing:"Uploading firmware, please wait...",
+  noport:"No Arduino found. Plug it in and press Refresh.",noavr:"This copy has no firmware uploader: upload the sketch with the Arduino IDE.",
+  hint_dino:"Raise your hand in front of the camera to jump.",hint_games:"Show 1 to 4 fingers for 0.8 s to pick a game. Fist = retry, five fingers = menu.",hint_robo:"Speak near the microphone. The eyes follow your face.",
+  e_api_key:"Enter your Gemini API key first.",e_camera:"Could not open the camera (is another program using it?).",e_ok:"Firmware uploaded.",e_failed:"Upload failed: check the port, close other programs using it, and try another USB cable.",e_no_hex:"Firmware file missing in this build.",e_no_avrdude:"Uploader missing in this build.",
+  tokens:"Tokens used",heard:"You said",reply:"Robo",fingers:"Fingers",hand:"Hand",yes:"detected",no:"not visible",raised:"Raised",st:"State"},
+ fr:{quit:"Quitter",s1:"Branchez l'Arduino Nano et choisissez son port",refresh:"Actualiser",s2:"Choisissez un projet",s3:"Démarrer",start:"Démarrer",stop:"Arrêter",flash:"Téléverser le firmware seulement",menu:"Retour au menu",autoflash:"Téléverser automatiquement le firmware quand le projet change",
+  dinoD:"Sautez en levant la main",gamesD:"Quatre jeux d'arcade avec vos doigts et votre main",roboD:"Un visage qui écoute, parle et vous suit",
+  key:"Clé API Gemini",turns:"Mémoire (tours)",budget:"Budget de jetons",mic:"Seuil du micro (0 = auto)",remember:"Mémoriser la clé sur cet ordinateur (en clair)",robocam:"Les yeux suivent mon visage (caméra)",getkey:"Obtenir une clé gratuite",
+  live:"En direct",logh:"Journal",idle:"Inactif",starting:"Démarrage...",running:"En marche",stopped:"Arrêté",error:"Erreur",flashing:"Téléversement du firmware, patientez...",
+  noport:"Aucun Arduino trouvé. Branchez-le et cliquez sur Actualiser.",noavr:"Cette copie n'a pas de téléverseur : téléversez le sketch avec l'Arduino IDE.",
+  hint_dino:"Levez la main devant la caméra pour sauter.",hint_games:"Montrez 1 à 4 doigts pendant 0,8 s pour choisir un jeu. Poing = rejouer, cinq doigts = menu.",hint_robo:"Parlez près du micro. Les yeux suivent votre visage.",
+  e_api_key:"Saisissez d'abord votre clé API Gemini.",e_camera:"Impossible d'ouvrir la caméra (un autre programme l'utilise ?).",e_ok:"Firmware téléversé.",e_failed:"Échec du téléversement : vérifiez le port, fermez les autres programmes qui l'utilisent, essayez un autre câble USB.",e_no_hex:"Fichier firmware absent de cette version.",e_no_avrdude:"Téléverseur absent de cette version.",
+  tokens:"Jetons utilisés",heard:"Vous avez dit",reply:"Robo",fingers:"Doigts",hand:"Main",yes:"détectée",no:"invisible",raised:"Levée",st:"État"},
+ ar:{quit:"إغلاق",s1:"وصّل أردوينو نانو واختر منفذه",refresh:"تحديث",s2:"اختر مشروعًا",s3:"التشغيل",start:"ابدأ",stop:"إيقاف",flash:"رفع الكود إلى اللوحة فقط",menu:"العودة للقائمة",autoflash:"ارفع الكود تلقائيًا عند تغيير المشروع",
+  dinoD:"اقفز برفع يدك",gamesD:"أربع ألعاب بأصابعك وحركة يدك",roboD:"وجه يستمع ويتحدث ويتبعك بنظره",
+  key:"مفتاح Gemini",turns:"الذاكرة (عدد الأدوار)",budget:"ميزانية التوكنز",mic:"عتبة الميكروفون (0 = تلقائي)",remember:"تذكّر المفتاح على هذا الحاسوب (يُحفظ كنص عادي)",robocam:"العينان تتبعان وجهي (الكاميرا)",getkey:"احصل على مفتاح مجاني",
+  live:"البث المباشر",logh:"السجل",idle:"متوقف",starting:"جارٍ التشغيل...",running:"يعمل",stopped:"توقف",error:"خطأ",flashing:"جارٍ رفع الكود إلى اللوحة، انتظر...",
+  noport:"لا توجد لوحة. وصّلها واضغط تحديث.",noavr:"هذه النسخة بلا أداة رفع: ارفع الكود من برنامج Arduino IDE.",
+  hint_dino:"ارفع يدك أمام الكاميرا لتقفز.",hint_games:"أظهر من 1 إلى 4 أصابع لمدة 0.8 ثانية لاختيار لعبة. القبضة = إعادة، خمسة أصابع = القائمة.",hint_robo:"تكلّم قرب الميكروفون. العينان تتبعان وجهك.",
+  e_api_key:"أدخل مفتاح Gemini أولًا.",e_camera:"تعذر فتح الكاميرا (هل يستعملها برنامج آخر؟).",e_ok:"تم رفع الكود إلى اللوحة.",e_failed:"فشل الرفع: تحقق من المنفذ وأغلق أي برنامج يستعمله وجرّب كابل USB آخر.",e_no_hex:"ملف الكود غير موجود في هذه النسخة.",e_no_avrdude:"أداة الرفع غير موجودة في هذه النسخة.",
+  tokens:"التوكنز المستهلكة",heard:"قلتَ",reply:"روبو",fingers:"الأصابع",hand:"اليد",yes:"ظاهرة",no:"غير ظاهرة",raised:"مرفوعة",st:"الحالة"}
+};
+let L="en",sel=null,seq=0,lastSt=null,streaming=false,cfgLoaded=false,boundCfg=false;
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const t=k=>(T[L][k]??T.en[k]??k);
+async function api(path,body){const r=await fetch(path,{method:body?"POST":"GET",headers:{"X-Token":TOKEN,"Content-Type":"application/json"},body:body?JSON.stringify(body):undefined});return r.json();}
+function setLang(l){L=l;document.documentElement.lang=l;document.documentElement.dir=l==="ar"?"rtl":"ltr";$$("[data-t]").forEach(e=>e.textContent=t(e.dataset.t));$$("#langSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.l===l));try{localStorage.setItem("nl",l)}catch(e){}api("/api/config",{lang:l});if(lastSt)render(lastSt,true);}
+$$("#langSeg button").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+$$(".proj").forEach(b=>b.onclick=()=>{sel=b.dataset.p;$$(".proj").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));$("#roboOpts").classList.toggle("hidden",sel!=="robo");});
+$("#refresh").onclick=()=>poll();
+$("#quit").onclick=async()=>{await api("/api/quit",{});document.body.innerHTML="<p style='padding:40px;font:18px sans-serif'>Nano Lab closed. You can close this tab.</p>";};
+function cfgBody(){return{port:$("#port").value,auto_flash:$("#autoflash").checked,history_turns:+$("#turns").value||0,token_budget:+$("#budget").value||100000,mic_threshold:+$("#mic").value||0,robo_camera:$("#robocam").checked,remember_key:$("#remember").checked,...($("#apiKey").value?{api_key:$("#apiKey").value}:{})};}
+$("#start").onclick=async()=>{if(!sel||!$("#port").value)return;await api("/api/config",cfgBody());await api("/api/start",{project:sel,port:$("#port").value});};
+$("#stop").onclick=()=>api("/api/stop",{});
+$("#menu").onclick=()=>api("/api/command",{name:"menu"});
+$("#flash").onclick=async()=>{if(!sel||!$("#port").value)return;await api("/api/flash",{project:sel,port:$("#port").value});};
+function render(s,skipLog){
+  lastSt=s;$("#ver").textContent="v"+s.version;
+  /* ports */
+  const sel_=$("#port"),cur=sel_.value||s.cfg.port;
+  const opts=s.ports.map(p=>`<option value="${p.device}">${p.device}  ${p.likely?"(Arduino?) ":""}${p.desc}</option>`).join("");
+  if(sel_.dataset.k!==opts){sel_.innerHTML=opts;sel_.dataset.k=opts;const want=[...sel_.options].find(o=>o.value===cur)||sel_.options[0];if(want)sel_.value=want.value;}
+  $("#portNote").textContent=s.ports.length?"":t("noport");
+  /* config fields (once) */
+  if(!cfgLoaded){cfgLoaded=true;$("#autoflash").checked=!!s.cfg.auto_flash;$("#turns").value=s.cfg.history_turns;$("#budget").value=s.cfg.token_budget;$("#mic").value=s.cfg.mic_threshold||0;$("#robocam").checked=!!s.cfg.robo_camera;$("#remember").checked=!!s.cfg.remember_key;if(s.cfg.has_key)$("#apiKey").placeholder="••••••••";}
+  const e=s.engine,run=e.status==="running"||e.status==="starting";
+  if(e.project&&!sel){const b=$(`.proj[data-p=${e.project}]`);b&&b.click();}
+  $("#start").classList.toggle("hidden",run);$("#stop").classList.toggle("hidden",!run);
+  $("#menu").classList.toggle("hidden",!(run&&e.project==="games"));
+  const working=s.busy||s.flash.active;
+  $("#start").disabled=working||!sel||!s.ports.length;$("#flash").disabled=working||run||!sel||!s.ports.length||!s.firmware.avrdude;
+  /* status */
+  const st=$("#status");let name=e.status;if(s.flash.active)name="flashing";
+  st.textContent=s.flash.active?t("flashing"):t(name==="idle"&&s.busy?"starting":name);
+  st.className="pill "+(e.status==="running"?"ok":(e.status==="error"||e.error)?"bad":"");
+  let msg="";if(e.error)msg=t("e_"+e.error)!=="e_"+e.error?t("e_"+e.error):e.error;
+  else if(s.flash.code&&!s.flash.active){msg=s.flash.code.startsWith("import:")?s.flash.code.slice(7):t("e_"+s.flash.code);}
+  $("#msg").textContent=msg;
+  const w=$("#warn");if(!s.firmware.avrdude){w.textContent=t("noavr");w.classList.remove("hidden");}else w.classList.add("hidden");
+  /* live panel */
+  const live=$("#live");live.classList.toggle("hidden",!run);
+  if(run&&!streaming){streaming=true;$("#cam").src="/video?t="+TOKEN+"&r="+Date.now();}
+  if(!run&&streaming){streaming=false;$("#cam").removeAttribute("src");}
+  if(run){
+    $("#hint").textContent=t("hint_"+e.project);const i=e.info||{};let h="";
+    if(e.project==="dino")h=`<p>${t("hand")}: <b>${i.hand?t("yes"):t("no")}</b> · ${t("raised")}: <b>${i.raised?"✔":"–"}</b></p>`;
+    if(e.project==="games")h=`<p>${t("fingers")}: <b>${i.fingers===9?"–":i.fingers}</b></p>`;
+    if(e.project==="robo")h=`<p>${t("st")}: <b>${i.state||""}</b></p>`;
+    $("#infoBox").innerHTML=h;
+    const tb=$("#tokBox");tb.classList.toggle("hidden",e.project!=="robo"||!i.budget);
+    if(i.budget){$("#tokTxt").textContent=`${t("tokens")}: ${i.tokens||0} / ${i.budget}`;$("#tokBar").style.width=Math.min(100,(i.tokens||0)*100/i.budget)+"%";}
+    $("#chat").innerHTML=i.heard||i.reply?`<b>${t("heard")}:</b> ${esc(i.heard||"")}<br><b>${t("reply")}:</b> ${esc(i.reply||"")}`:"";
+  }
+  /* log */
+  if(!skipLog&&s.log.lines.length){const el=$("#log");const stick=el.scrollTop+el.clientHeight>=el.scrollHeight-8;el.textContent+=s.log.lines.join("\n")+"\n";if(stick)el.scrollTop=el.scrollHeight;}
+  if(!skipLog)seq=s.log.seq;
+}
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+async function poll(){try{render(await api("/api/state?since="+seq));}catch(e){}}
+(function init(){let l=null;try{l=localStorage.getItem("nl")}catch(e){}if(!l){const n=(navigator.language||"en").slice(0,2);l=T[n]?n:"en";}setLang(l);poll();setInterval(poll,800);})();
+</script>
+</body>
+</html>

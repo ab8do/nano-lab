@@ -211,6 +211,9 @@ export GEMINI_API_KEY="..."        # Windows (PowerShell): $env:GEMINI_API_KEY="
 ```
 
 Model names change often; the scripts try several in order and remember the one that works. Troubleshooting: [documentation/troubleshooting.md](documentation/troubleshooting.md).
+### 8.1 Desktop app (no installation)
+
+   Instead of installing Python and libraries, download the ready-made app from the **Releases** page (Windows or Linux), unzip it and run `NanoLab`. A control panel opens in the browser (English, Français, العربية): choose the port and a project, press **Start**; the matching firmware is uploaded to the Nano automatically when the project changes. Details, security notes and the build pipeline: [documentation/app.md](documentation/app.md).
 
 ## 9. Limitations and threats to validity
 

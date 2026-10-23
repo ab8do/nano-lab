@@ -1,0 +1,116 @@
+name: Build desktop app
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: windows
+          - os: ubuntu-latest
+            name: linux
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: System libraries (Linux)
+        if: matrix.name == 'linux'
+        run: sudo apt-get update && sudo apt-get install -y libportaudio2 libgl1 libegl1
+
+      - name: Python dependencies
+        run: pip install -r app/requirements.txt pyinstaller
+
+      - uses: arduino/setup-arduino-cli@v2
+
+      - name: Compile the three firmwares to .hex
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install arduino:avr
+          arduino-cli lib install U8g2
+          mkdir -p app/firmware
+          build() {
+            arduino-cli compile --fqbn arduino:avr:nano --output-dir "out/$1" "$2"
+            cp out/$1/*.ino.hex "app/firmware/$1.hex"
+          }
+          build dino  firmware/dino/dino_game
+          build games firmware/gesture-games/gesture_games
+          build robo  firmware/robo-face/smart_face_v3
+          ls -l app/firmware
+
+      - name: Bundle avrdude (uploader) from the Arduino AVR tools
+        run: |
+          DATA=$(arduino-cli config get directories.data)
+          if command -v cygpath >/dev/null 2>&1; then DATA=$(cygpath -u "$DATA"); fi
+          SRC=$(ls -d "$DATA"/packages/arduino/tools/avrdude/*/ | head -1)
+          mkdir -p app/tools/avrdude
+          cp -r "$SRC"/* app/tools/avrdude/
+          ls -R app/tools/avrdude | head -30
+
+      - name: Download the MediaPipe hand model
+        run: |
+          mkdir -p app/assets
+          curl -L --fail -o app/assets/hand_landmarker.task \
+            https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
+          ls -l app/assets
+
+      - name: Build with PyInstaller
+        working-directory: app
+        run: |
+          SEP=":"; EXTRA=""
+          if [ "${{ matrix.name }}" = "windows" ]; then SEP=";"; EXTRA="--noconsole --hidden-import pyttsx3.drivers.sapi5"; fi
+          if [ "${{ matrix.name }}" = "linux" ]; then EXTRA="--hidden-import pyttsx3.drivers.espeak"; fi
+          pyinstaller --noconfirm --clean --name NanoLab $EXTRA \
+            --paths . \
+            --hidden-import nanolab.dino --hidden-import nanolab.games --hidden-import nanolab.robo \
+            --hidden-import pyttsx3.drivers \
+            --collect-all mediapipe --collect-data cv2 --collect-submodules google.genai \
+            --collect-submodules pyttsx3 --collect-all edge_tts --collect-all miniaudio \
+            --add-data "web${SEP}web" --add-data "assets${SEP}assets" \
+            --add-data "firmware${SEP}firmware" --add-data "tools${SEP}tools" \
+            launcher.py
+          ls dist/NanoLab | head -20
+
+      - name: Package
+        working-directory: app
+        run: |
+          if [ "${{ matrix.name }}" = "windows" ]; then
+            python -c "import shutil; shutil.make_archive('NanoLab-windows','zip','dist')"
+          else
+            python -c "import shutil; shutil.make_archive('NanoLab-linux','gztar','dist')"
+          fi
+          ls -l NanoLab-*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: NanoLab-${{ matrix.name }}
+          path: |
+            app/NanoLab-*.zip
+            app/NanoLab-*.tar.gz
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
